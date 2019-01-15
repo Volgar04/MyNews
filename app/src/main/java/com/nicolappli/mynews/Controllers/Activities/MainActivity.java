@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         // Set Adapter PageAdapter and glue it together
         pager.setAdapter(new PageAdapter(getSupportFragmentManager()) {
         });
-
         // Get TabLayout from layout
         TabLayout tabs= findViewById(R.id.activity_main_tabs);
         // Glue TabLayout and ViewPager together

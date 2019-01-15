@@ -33,7 +33,6 @@ public class PageFragment extends Fragment {
         args.putInt(KEY_COLOR, color);
         frag.setArguments(args);
 
-        
         return(frag);
     }
 

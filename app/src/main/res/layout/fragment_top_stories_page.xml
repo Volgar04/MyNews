@@ -5,17 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".Controllers.Fragments.BusinessPageFragment"
     android:gravity="center"
-    android:background="#BED4D6">
+    android:background="#ADC6A4">
 
-    <Button
-        android:id="@+id/test1"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EXECUTE ACTION IN MAIN THREAD"
-        android:textColor="#FFF"
+        android:layout_margin="20dip"
+        android:textSize="25sp"
         android:textStyle="bold"
-        android:background="#E26A6A"
-        android:tag="10"
-        android:onClick="onClickButton"/>
+        android:textColor="#fff"
+        android:textAlignment="center"
+        android:text="Onglet Top Stories de l'application MyNews"/>
 
 </LinearLayout>
