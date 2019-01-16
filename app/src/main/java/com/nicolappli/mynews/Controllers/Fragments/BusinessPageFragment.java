@@ -28,5 +28,4 @@ public class BusinessPageFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_business_page, container, false);
     }
-
 }
