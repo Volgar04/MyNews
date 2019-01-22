@@ -1,98 +1,125 @@
 package com.nicolappli.mynews.Controllers.Fragments;
 
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.nicolappli.mynews.Adapters.ArticleAdapter;
+import com.bumptech.glide.Glide;
+import com.nicolappli.mynews.Adapters.RecyclerViewAdapterTopStories;
+import com.nicolappli.mynews.Models.NYTTopStories;
 import com.nicolappli.mynews.R;
-import com.nicolappli.mynews.Utils.NetworkAsyncTask;
-import com.nicolappli.mynews.Views.ArticleItem;
+import com.nicolappli.mynews.Utils.NYTStreams;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopStoriesPageFragment extends Fragment implements NetworkAsyncTask.Listeners {
+public class TopStoriesPageFragment extends Fragment {
+    // FOR DESIGN
+    @BindView(R.id.recyclerView)
+            RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout)
+            SwipeRefreshLayout mSwipeRefreshLayout;
 
-    Context thisContext;
-    RecyclerView recyclerView;
-    ArticleAdapter adapter;
-
-    List<ArticleItem> articleList;
-
-    @BindView(R.id.test11)
-    TextView textview;
+    // FOR DATA
+    private Disposable mDisposable;
+    private RecyclerViewAdapterTopStories mAdapter;
+    public List<NYTTopStories.Result> mTopStoriesArray = new ArrayList<>();
 
     public TopStoriesPageFragment() { }
 
     public static TopStoriesPageFragment newInstance(){
-        return (new TopStoriesPageFragment());
+        return new TopStoriesPageFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        thisContext=container.getContext();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_top_stories_page, container, false);
         ButterKnife.bind(this, rootView);
-
-//        articleList = new ArrayList<>();
-
-        //recyclerView = rootView.findViewById(R.id.recyclerView);
-//        recyclerView.setHasFixedSize(true); // Set the size of the RecyclerView has fixed
-
-//        recyclerView.setLayoutManager(new LinearLayoutManager(thisContext));
+        this.buildRecyclerView();
+        this.configureSwipeResfreshLayout();
+        this.executeHttpRequestWithRetrofit();
 
         return rootView;
     }
 
-    @OnClick(R.id.test11btn)
-    public void submit(View view){
-        this.executeHttpRequest();
-    }
-
-    private void executeHttpRequest(){
-        new NetworkAsyncTask(this).execute("https://api.nytimes.com/svc/mostpopular/v2/emailed/1.json?api-key=AHGAejtcPdRPUyAnADLIR4H6g7nLW4E6");
-    }
-
     @Override
-    public void onPreExecute() {
-        this.updateUIWhenStartingHTTPRequest();
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
     }
 
-    @Override
-    public void doInBackground() {
+    // --------------------
+    // CONFIGURATION
+    // --------------------
 
+    private void buildRecyclerView(){
+        this.mAdapter = new RecyclerViewAdapterTopStories(mTopStoriesArray, Glide.with(this));
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setAdapter(mAdapter);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    @Override
-    public void onPostExecute(String json) {
-        this.updateUIWhenStopingHTTPRequest(json);
+    private void configureSwipeResfreshLayout(){
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                executeHttpRequestWithRetrofit();
+            }
+        });
     }
 
-    private void updateUIWhenStartingHTTPRequest(){
-        this.textview.setText("Downloading...");
+    // --------------------
+    // HTTP (RxJAVA)
+    // --------------------
+
+    public void executeHttpRequestWithRetrofit(){
+        this.mDisposable = NYTStreams.streamFetchTopStories("home").subscribeWith(new DisposableObserver<NYTTopStories>() {
+            @Override
+            public void onNext(NYTTopStories topStories) {
+                Log.d("TopStories Tag", "On Next");
+                updateTopStoriesUI(topStories);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("TopStories Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("TopStories Tag", "On Complete !");
+            }
+        });
     }
 
-    private void updateUIWhenStopingHTTPRequest(String response){
-        this.textview.setText(response);
+    private void disposeWhenDestroy() {
+        if(this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
+    }
+
+    // --------------------
+    // UPDATE UI
+    // --------------------
+
+    private void updateTopStoriesUI(NYTTopStories topStories){
+        mSwipeRefreshLayout.setRefreshing(false);
+        this.mTopStoriesArray.clear();
+        this.mTopStoriesArray.addAll(topStories.getResults());
+        this.mAdapter.notifyDataSetChanged();
     }
 }

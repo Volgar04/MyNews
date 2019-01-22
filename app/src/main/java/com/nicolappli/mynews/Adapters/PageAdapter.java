@@ -9,6 +9,8 @@ import com.nicolappli.mynews.Controllers.Fragments.MostPopularPageFragment;
 import com.nicolappli.mynews.Controllers.Fragments.TopStoriesPageFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
+    public static final String[] topStoriesSection={"home", "", "business"};
+    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "BUSINESS"};
 
     // Default Constructor
     public PageAdapter(FragmentManager mgr){
@@ -17,7 +19,7 @@ public class PageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return (3); // Number of page to show
+        return tabTitle.length; // Number of page to show
     }
 
     @Override

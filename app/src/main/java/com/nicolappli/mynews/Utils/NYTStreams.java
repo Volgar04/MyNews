@@ -1,0 +1,17 @@
+package com.nicolappli.mynews.Utils;
+
+import com.nicolappli.mynews.Models.NYTTopStories;
+import java.util.concurrent.TimeUnit;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+public class NYTStreams {
+    public static Observable<NYTTopStories> streamFetchTopStories(String section){
+        NYTService nytService = NYTService.retrofit.create(NYTService.class);
+        return nytService.getTopStories(section)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS);
+    }
+}
