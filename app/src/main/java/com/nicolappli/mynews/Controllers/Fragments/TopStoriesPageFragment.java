@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.nicolappli.mynews.Adapters.RecyclerViewAdapterTopStories;
 import com.nicolappli.mynews.Models.NYTTopStories;
 import com.nicolappli.mynews.R;
+import com.nicolappli.mynews.Utils.ItemClickSupport;
 import com.nicolappli.mynews.Utils.NYTStreams;
 
 import java.util.ArrayList;
@@ -29,15 +30,15 @@ import io.reactivex.observers.DisposableObserver;
  */
 public class TopStoriesPageFragment extends Fragment {
     // FOR DESIGN
-    @BindView(R.id.recyclerView)
+    @BindView(R.id.recycler_view_top_stories)
             RecyclerView mRecyclerView;
-    @BindView(R.id.swipe_refresh_layout)
+    @BindView(R.id.swipe_refresh_layout_top_stories)
             SwipeRefreshLayout mSwipeRefreshLayout;
 
     // FOR DATA
     private Disposable mDisposable;
     private RecyclerViewAdapterTopStories mAdapter;
-    public List<NYTTopStories.Result> mTopStoriesArray = new ArrayList<>();
+    private List<NYTTopStories.Result> mTopStoriesArray = new ArrayList<>();
 
     public TopStoriesPageFragment() { }
 
@@ -52,9 +53,9 @@ public class TopStoriesPageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_top_stories_page, container, false);
         ButterKnife.bind(this, rootView);
         this.buildRecyclerView();
-        this.configureSwipeResfreshLayout();
+        this.configureSwipeRefreshLayout();
         this.executeHttpRequestWithRetrofit();
-
+        this.configureOnClickRecyclerView();
         return rootView;
     }
 
@@ -62,6 +63,20 @@ public class TopStoriesPageFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         this.disposeWhenDestroy();
+    }
+
+    // --------------------
+    // ACTION
+    // --------------------
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(mRecyclerView,R.layout.recycler_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Log.e("TopStories Tag", "Position : "+position);
+                    }
+                });
     }
 
     // --------------------
@@ -75,7 +90,7 @@ public class TopStoriesPageFragment extends Fragment {
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void configureSwipeResfreshLayout(){
+    private void configureSwipeRefreshLayout(){
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

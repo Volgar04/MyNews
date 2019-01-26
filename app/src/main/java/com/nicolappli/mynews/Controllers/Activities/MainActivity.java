@@ -1,13 +1,12 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 import com.nicolappli.mynews.Adapters.PageAdapter;
 import com.nicolappli.mynews.R;
@@ -39,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this,"Il n'y a rien à paramétrer ici !", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_activity_main_search:
-                Toast.makeText(this, "Recherche indisponible pour le moment.", Toast.LENGTH_LONG).show();
+                Intent searchArticlesActivity = new Intent(MainActivity.this, SearchArticlesActivity.class);
+                startActivity(searchArticlesActivity);
+                //Toast.makeText(this, "Recherche indisponible pour le moment.", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

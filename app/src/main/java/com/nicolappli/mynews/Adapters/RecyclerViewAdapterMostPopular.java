@@ -10,34 +10,34 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
-import com.nicolappli.mynews.Models.NYTTopStories;
+import com.nicolappli.mynews.Models.NYTMostPopular;
 import com.nicolappli.mynews.R;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecyclerViewAdapterTopStories extends RecyclerView.Adapter<RecyclerViewAdapterTopStories.NYTViewHolder>{
+public class RecyclerViewAdapterMostPopular extends RecyclerView.Adapter<RecyclerViewAdapterMostPopular.NYTViewHolder>{
 
-    private List<NYTTopStories.Result> mResults;
+    private List<NYTMostPopular.Result> mResults;
     private RequestManager mGlide;
 
-    public RecyclerViewAdapterTopStories(List<NYTTopStories.Result> resultsTopStories, RequestManager glide) {
-        this.mResults = resultsTopStories;
+    public RecyclerViewAdapterMostPopular(List<NYTMostPopular.Result> resultsMostPopular, RequestManager glide) {
+        this.mResults = resultsMostPopular;
         this.mGlide = glide;
     }
 
     @NonNull
     @Override
-    public NYTViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewAdapterMostPopular.NYTViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_item, parent, false);
-        return new NYTViewHolder(view);
+        return new RecyclerViewAdapterMostPopular.NYTViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NYTViewHolder holder, int position) {
-        holder.updateWithNYTTopStories(this.mResults.get(position), this.mGlide);
+    public void onBindViewHolder(@NonNull RecyclerViewAdapterMostPopular.NYTViewHolder holder, int position) {
+        holder.updateWithNYTMostPopular(this.mResults.get(position), this.mGlide);
     }
 
     @Override
@@ -47,27 +47,27 @@ public class RecyclerViewAdapterTopStories extends RecyclerView.Adapter<Recycler
 
     class NYTViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.article_layout)
-                RelativeLayout layoutArticle;
+        RelativeLayout layoutArticle;
         @BindView(R.id.article_image)
-                ImageView imageArticle;
+        ImageView imageArticle;
         @BindView(R.id.article_Title)
-                TextView txtTitleArticle;
+        TextView txtTitleArticle;
         @BindView(R.id.article_date)
-                TextView txtDateArticle;
+        TextView txtDateArticle;
         @BindView(R.id.article_summary)
-                TextView txtSummaryArticle;
+        TextView txtSummaryArticle;
 
         NYTViewHolder(View articleView) {
             super(articleView);
             ButterKnife.bind(this, articleView);
         }
 
-        void updateWithNYTTopStories(NYTTopStories.Result result, RequestManager glide) {
+        void updateWithNYTMostPopular(NYTMostPopular.Result result, RequestManager glide) {
             this.txtTitleArticle.setText(result.getSection());
             this.txtSummaryArticle.setText(result.getTitle());
             this.txtDateArticle.setText(result.getPublishedDate());
-            if ((result.getMultimedia() != null) && (!result.getMultimedia().isEmpty()))
-                glide.load(result.getMultimedia().get(0).getUrl()).into(imageArticle);
+            if ((result.getMedia().get(0).getMediaMetadata() != null) && (!result.getMedia().get(0).getMediaMetadata().isEmpty()))
+                glide.load(result.getMedia().get(0).getMediaMetadata().get(0).getUrl()).into(imageArticle);
             if ((result.getSubsection() != null) && (!result.getSubsection().isEmpty()))
                 this.txtTitleArticle.setText(result.getSection()+" > "+result.getSubsection());
         }

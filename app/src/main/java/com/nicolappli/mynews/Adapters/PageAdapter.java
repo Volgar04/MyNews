@@ -9,7 +9,7 @@ import com.nicolappli.mynews.Controllers.Fragments.MostPopularPageFragment;
 import com.nicolappli.mynews.Controllers.Fragments.TopStoriesPageFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
-    public static final String[] topStoriesSection={"home", "", "business"};
+    //public static final String[] topStoriesSection={"home", "", "business"};
     private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "BUSINESS"};
 
     // Default Constructor

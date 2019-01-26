@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edt_query"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Search query term"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintEnd_toEndOf="@id/guideline_95"/>
+
+    <TextView
+        android:id="@+id/txt_date_begin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Begin Date"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintTop_toBottomOf="@+id/edt_query"/>
+
+    <EditText
+        android:id="@+id/edt_date_begin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintEnd_toEndOf="@id/guideline_475"
+        app:layout_constraintTop_toBottomOf="@+id/txt_date_begin" />
+
+    <TextView
+        android:id="@+id/txt_date_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="End Date"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/guideline_525"
+        app:layout_constraintTop_toBottomOf="@+id/edt_query"/>
+
+    <EditText
+        android:id="@+id/edt_date_end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        app:layout_constraintStart_toEndOf="@id/guideline_525"
+        app:layout_constraintEnd_toEndOf="@id/guideline_95"
+        app:layout_constraintTop_toBottomOf="@+id/txt_date_end" />
+
+    <!-- CheckBox and TextView left -->
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_arts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintTop_toBottomOf="@id/edt_date_begin"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_arts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Arts"
+        android:padding="6dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_arts"
+        app:layout_constraintTop_toBottomOf="@+id/edt_date_begin" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_business"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintTop_toBottomOf="@+id/checkbox_arts"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_business"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Business"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_business"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_arts"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_entrepreneurs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_5"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_business"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_entrepreneurs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entrepreneurs"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_entrepreneurs"
+        app:layout_constraintTop_toBottomOf="@+id/checkbox_business"/>
+
+    <!-- CheckBox and TextView Right -->
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_politics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_525"
+        app:layout_constraintTop_toBottomOf="@+id/edt_date_end"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_politics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Politics"
+        android:padding="6dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_politics"
+        app:layout_constraintTop_toBottomOf="@id/edt_date_end"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_sports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_525"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_politics"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_sports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sports"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_sports"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_politics"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_travel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/guideline_525"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_sports"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txt_travel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Travel"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/checkbox_travel"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_sports"/>
+
+
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.052083332" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_95"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_475"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.475" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_525"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.525" />
+
+</android.support.constraint.ConstraintLayout>
