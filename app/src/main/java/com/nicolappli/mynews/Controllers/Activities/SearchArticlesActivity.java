@@ -1,5 +1,6 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -10,9 +11,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.nicolappli.mynews.R;
-
+import com.nicolappli.mynews.Utils.Util;
+import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,7 +42,8 @@ public class SearchArticlesActivity extends AppCompatActivity {
     EditText mEditTextEndDate;
 
     public String[] CHECKBOX_VALUES = {"Arts", "Business", "Entrepreneurs", "Politics", "Sports", "Travel"};
-    public String[] mCheckBoxStatus = new String[5];
+    public CheckBox[] checkBoxes ;
+    public String[] mCheckBoxStatus = new String[6];
     public CheckBox[] mCheckBoxes;
     public String mQuery;
     public String mBeginDate, mEndDate;
@@ -49,70 +51,79 @@ public class SearchArticlesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_articles_page);
+        setContentView(R.layout.activity_search_articles);
         ButterKnife.bind(this);
         // Initialise checkboxes list
         this.mCheckBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
 
+        try {
+            Log.i("config","name : "+Util.getProperty("name",getApplicationContext()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void onCheckboxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        switch (view.getId()) {
-            case R.id.checkbox_arts:
-                if (checked)
-                    mCheckBoxStatus[0] = CHECKBOX_VALUES[0];
-                else
-                    mCheckBoxStatus[0] = "";
-                break;
-            case R.id.checkbox_business:
-                if (checked)
-                    mCheckBoxStatus[1] = CHECKBOX_VALUES[1];
-                else
-                    mCheckBoxStatus[1] = "";
-                break;
-            case R.id.checkbox_entrepreneurs:
-                if (checked)
-                    mCheckBoxStatus[2] = CHECKBOX_VALUES[2];
-                else
-                    mCheckBoxStatus[2] = "";
-            case R.id.checkbox_politics:
-                if (checked)
-                    mCheckBoxStatus[3] = CHECKBOX_VALUES[3];
-                else
-                    mCheckBoxStatus[3] = "";
-                break;
-            case R.id.checkbox_sports:
-                if (checked)
-                    mCheckBoxStatus[4] = CHECKBOX_VALUES[4];
-                else
-                    mCheckBoxStatus[4] = "";
-                break;
-            case R.id.checkbox_travel:
-                if (checked)
-                    mCheckBoxStatus[5] = CHECKBOX_VALUES[5];
-                else
-                    mCheckBoxStatus[5] = "";
-                break;
+        checkBoxes = new CheckBox[] {mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
+        for (int i = 0; i < checkBoxes.length; i++) {
+            if(checkBoxes[i].isChecked()){
+                //Log.i("tag","checked : "+CHECKBOX_VALUES[i]);
+                mCheckBoxStatus[i] = CHECKBOX_VALUES[i];
+                //Log.i("tag","arts : "+mCheckBoxStatus[0]);
+                //Log.i("tag","business : "+mCheckBoxStatus[1]);
+                //Log.i("tag","entrepreneurs : "+mCheckBoxStatus[2]);
+                //Log.i("tag","politics : "+mCheckBoxStatus[3]);
+                //Log.i("tag","sports : "+mCheckBoxStatus[4]);
+                //Log.i("tag","travel : "+mCheckBoxStatus[5]);
+            }else{
+                mCheckBoxStatus[i] = null;
+                //Log.i("tag","unchecked : "+CHECKBOX_VALUES[i]);
+                //Log.i("tag","arts : "+mCheckBoxStatus[0]);
+                //Log.i("tag","business : "+mCheckBoxStatus[1]);
+                //Log.i("tag","entrepreneurs : "+mCheckBoxStatus[2]);
+                //Log.i("tag","politics : "+mCheckBoxStatus[3]);
+                //Log.i("tag","sports : "+mCheckBoxStatus[4]);
+                //Log.i("tag","travel : "+mCheckBoxStatus[5]);
+            }
         }
+    }
+
+    public String getNewDesk(String[] strings){
+        StringBuilder res = new StringBuilder();
+
+        for (String string : strings) {
+            if (string != null){
+                res.append("\"");
+                res.append(string);
+                res.append("\" ");
+            }
+        }
+        return res.toString();
     }
 
     public void getQueryAndDates() {
         mQuery = mEditTextQuery.getText().toString();
         mBeginDate = mEditTextBeginDate.getText().toString();
         mEndDate = mEditTextEndDate.getText().toString();
-        Log.e("Tag Search Article", "Query = " + mQuery + ", begin date = " + mBeginDate + ", end date = " + mEndDate);
+        //Log.i("SearchArticles Tag", "Query = " + mQuery + ", begin date = " + mBeginDate + ", end date = " + mEndDate);
     }
 
     @OnClick(R.id.btn_search)
     public void onViewClickedSearch() {
         getQueryAndDates();
         String errorText;
-        if(!mQuery.isEmpty()){
-            Log.e("Tag Search Article", "Tout c'est bien passé : " + mQuery);}
-        else {
-            Log.e("Tag Search Article", "il y a eu un problème : " + mQuery);
+        if(!getNewDesk(mCheckBoxStatus).isEmpty() && !mQuery.isEmpty()){
+            Log.i("SearchArticles Tag", "Query : " + mQuery);
+            Log.i("SearchArticles Tag", "getNewDesk : " + getNewDesk(mCheckBoxStatus));
+            String[] values = {mQuery, getNewDesk(mCheckBoxStatus), mBeginDate, mEndDate};
+
+            Intent searchResultsActivity = new Intent(SearchArticlesActivity.this, SearchResultsActivity.class);
+            searchResultsActivity.putExtra("VALUES_SEARCH_ARTICLES",values);
+            startActivity(searchResultsActivity);
+        } else {
+            Log.i("SearchArticles Tag", "il y a eu un problème : " + mQuery);
+            Log.i("SearchArticles Tag", "getNewDesk false : " + getNewDesk(mCheckBoxStatus));
             errorText = "Il faut écrire du text dans la barre de recherche";
             this.alertDialogError(errorText);
         }

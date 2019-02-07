@@ -107,18 +107,18 @@ public class TopStoriesPageFragment extends Fragment {
         this.mDisposable = NYTStreams.streamFetchTopStories("home").subscribeWith(new DisposableObserver<NYTTopStories>() {
             @Override
             public void onNext(NYTTopStories topStories) {
-                Log.d("TopStories Tag", "On Next");
+                Log.i("TopStories Tag", "On Next");
                 updateTopStoriesUI(topStories);
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("TopStories Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
+                Log.e("TopStories Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
             }
 
             @Override
             public void onComplete() {
-                Log.d("TopStories Tag", "On Complete !");
+                Log.i("TopStories Tag", "On Complete !");
             }
         });
     }

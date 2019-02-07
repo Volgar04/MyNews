@@ -12,7 +12,12 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
 import com.nicolappli.mynews.Models.NYTTopStories;
 import com.nicolappli.mynews.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,8 +51,6 @@ public class RecyclerViewAdapterTopStories extends RecyclerView.Adapter<Recycler
     }
 
     class NYTViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.article_layout)
-                RelativeLayout layoutArticle;
         @BindView(R.id.article_image)
                 ImageView imageArticle;
         @BindView(R.id.article_Title)

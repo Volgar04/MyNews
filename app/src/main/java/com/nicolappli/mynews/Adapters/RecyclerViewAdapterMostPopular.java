@@ -46,8 +46,6 @@ public class RecyclerViewAdapterMostPopular extends RecyclerView.Adapter<Recycle
     }
 
     class NYTViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.article_layout)
-        RelativeLayout layoutArticle;
         @BindView(R.id.article_image)
         ImageView imageArticle;
         @BindView(R.id.article_Title)

@@ -1,7 +1,12 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +15,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.nicolappli.mynews.Adapters.PageAdapter;
 import com.nicolappli.mynews.R;
+import com.nicolappli.mynews.Utils.MyAlarmReceiver;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    private PendingIntent mPendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.configureToolbar();
         this.configureViewPagerAndTabs();
-
+        //this.configureAlarmManager();
+        //this.startAlarm();
     }
 
     @Override
@@ -34,13 +45,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle actions on menu items
         switch (item.getItemId()){
-            case R.id.menu_activity_main_params:
-                Toast.makeText(this,"Il n'y a rien à paramétrer ici !", Toast.LENGTH_LONG).show();
+            case R.id.menu_activity_main_help:
+                Toast.makeText(this,"section help", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_activity_main_about:
+                Toast.makeText(this,"section about", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_activity_main_notifications:
+                Intent notificationsActivity = new Intent(MainActivity.this, NotificationsActivity.class);
+                startActivity(notificationsActivity);
                 return true;
             case R.id.menu_activity_main_search:
                 Intent searchArticlesActivity = new Intent(MainActivity.this, SearchArticlesActivity.class);
                 startActivity(searchArticlesActivity);
-                //Toast.makeText(this, "Recherche indisponible pour le moment.", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -50,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private void configureToolbar(){
         // Get the toolbar view inside the activity
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
+        // Change the color of the overflow button
+        Objects.requireNonNull(toolbar.getOverflowIcon()).setColorFilter(ContextCompat.getColor(this,R.color.white), PorterDuff.Mode.SRC_ATOP);
         // Sets the Toolbar
         setSupportActionBar(toolbar);
     }
@@ -65,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         // Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);
         // Design purpose. Tabs have the same width
-        tabs.setTabMode(TabLayout.MODE_FIXED);
+        tabs.setTabMode(TabLayout.GRAVITY_FILL);
+    }
+
+    private void configureAlarmManager(){
+        Intent alarmIntent = new Intent(MainActivity.this, MyAlarmReceiver.class);
+        mPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void startAlarm(){
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        assert manager != null;
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,0,AlarmManager.INTERVAL_FIFTEEN_MINUTES,mPendingIntent);
+        Toast.makeText(this, "Alarm set !", Toast.LENGTH_SHORT).show();
     }
 }

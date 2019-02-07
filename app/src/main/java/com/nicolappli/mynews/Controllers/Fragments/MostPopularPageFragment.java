@@ -52,7 +52,6 @@ public class MostPopularPageFragment extends Fragment {
         this.buildRecyclerView();
         this.configureSwipeRefreshLayout();
         this.executeHttpRequestWithRetrofit();
-
         return rootView;
     }
 
@@ -90,18 +89,18 @@ public class MostPopularPageFragment extends Fragment {
         this.mDisposable = NYTStreams.streamFetchMostPopular().subscribeWith(new DisposableObserver<NYTMostPopular>() {
             @Override
             public void onNext(NYTMostPopular mostPopular) {
-                Log.d("MostPopular Tag", "On Next");
+                Log.i("MostPopular Tag", "On Next");
                 updateMostPopularUI(mostPopular);
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("MostPopular Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
+                Log.e("MostPopular Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
             }
 
             @Override
             public void onComplete() {
-                Log.d("MostPopular Tag", "On Complete !");
+                Log.i("MostPopular Tag", "On Complete !");
             }
         });
     }

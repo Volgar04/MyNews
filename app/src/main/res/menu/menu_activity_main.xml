@@ -3,15 +3,23 @@
 
     <item
         android:id="@+id/menu_activity_main_search"
-        android:icon="@drawable/baseline_search_white_36dp"
+        android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom"
-        android:title="Rechercher">
-    </item>
+        android:title="Rechercher" />
+
     <item
-        android:id="@+id/menu_activity_main_params"
-        android:icon="@drawable/baseline_more_vert_white_36dp"
-        app:showAsAction="ifRoom"
-        android:title="Paramètres">
-    </item>
+        android:id="@+id/menu_activity_main_notifications"
+        android:title="Notifications"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_activity_main_help"
+        android:title="Help"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_activity_main_about"
+        android:title="About"
+        app:showAsAction="never" />
 
 </menu>
