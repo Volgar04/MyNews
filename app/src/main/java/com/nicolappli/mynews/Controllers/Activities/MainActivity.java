@@ -4,19 +4,23 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.nicolappli.mynews.Adapters.PageAdapter;
 import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.MyAlarmReceiver;
+import com.nicolappli.mynews.Utils.Util;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         this.configureViewPagerAndTabs();
         //this.configureAlarmManager();
         //this.startAlarm();
+
     }
 
     @Override
@@ -54,10 +59,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_activity_main_notifications:
                 Intent notificationsActivity = new Intent(MainActivity.this, NotificationsActivity.class);
                 startActivity(notificationsActivity);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
                 return true;
             case R.id.menu_activity_main_search:
                 Intent searchArticlesActivity = new Intent(MainActivity.this, SearchArticlesActivity.class);
                 startActivity(searchArticlesActivity);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                return true;
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -66,9 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureToolbar(){
         // Get the toolbar view inside the activity
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
-        // Change the color of the overflow button
-        Objects.requireNonNull(toolbar.getOverflowIcon()).setColorFilter(ContextCompat.getColor(this,R.color.white), PorterDuff.Mode.SRC_ATOP);
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         // Sets the Toolbar
         setSupportActionBar(toolbar);
     }
@@ -98,4 +107,25 @@ public class MainActivity extends AppCompatActivity {
         manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,0,AlarmManager.INTERVAL_FIFTEEN_MINUTES,mPendingIntent);
         Toast.makeText(this, "Alarm set !", Toast.LENGTH_SHORT).show();
     }
+
+    //public void getPreferences(){
+    //    SharedPreferences prefs= getSharedPreferences("PREFERENCES", MODE_PRIVATE);
+    //    prefs.getString("arts", null);
+    //    prefs.getString("business", null);
+    //    prefs.getString("entrepreneurs", null);
+    //    prefs.getString("politics", null);
+    //    prefs.getString("sports", null);
+    //    prefs.getString("travel", null);
+    //    prefs.getBoolean("switch", false);
+//
+    //    Log.i("preferencestag", "arts : "+prefs.getString("arts", null));
+    //    Log.i("preferencestag", "business : "+prefs.getString("business", null));
+    //    Log.i("preferencestag", "entrepreneurs : "+prefs.getString("entrepreneurs", null));
+    //    Log.i("preferencestag", "politics : "+prefs.getString("politics", null));
+    //    Log.i("preferencestag", "sports : "+prefs.getString("sports", null));
+    //    Log.i("preferencestag", "travel : "+prefs.getString("travel", null));
+    //    Log.i("preferencestag", "switch : "+prefs.getBoolean("switch", false));
+    //}
+
+
 }

@@ -1,15 +1,13 @@
 package com.nicolappli.mynews.Utils;
 
-import com.nicolappli.mynews.Models.NYTMostPopular;
-import com.nicolappli.mynews.Models.NYTSearchArticles;
-import com.nicolappli.mynews.Models.NYTTopStories;
+import com.nicolappli.mynews.Models.NewYorkTimesAPI;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class NYTStreams {
-    public static Observable<NYTTopStories> streamFetchTopStories(String section){
+    public static Observable<NewYorkTimesAPI> streamFetchTopStories(String section){
         NYTService nytService = NYTService.retrofit.create(NYTService.class);
         return nytService.getTopStories(section)
                 .subscribeOn(Schedulers.io())
@@ -17,7 +15,7 @@ public class NYTStreams {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public static Observable<NYTMostPopular> streamFetchMostPopular(){
+    public static Observable<NewYorkTimesAPI> streamFetchMostPopular(){
         NYTService nytService = NYTService.retrofit.create(NYTService.class);
         return nytService.getMostPopular()
                 .subscribeOn(Schedulers.io())
@@ -25,7 +23,7 @@ public class NYTStreams {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public static Observable<NYTSearchArticles> streamFetchSearchArticles(String query, String news_desk){
+    public static Observable<NewYorkTimesAPI> streamFetchSearchArticles(String query, String news_desk){
         NYTService nytService = NYTService.retrofit.create(NYTService.class);
         return nytService.getSearchArticle(query, news_desk)//, begin_date, end_date
                 .subscribeOn(Schedulers.io())

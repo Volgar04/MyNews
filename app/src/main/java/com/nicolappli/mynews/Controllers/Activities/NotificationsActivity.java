@@ -1,13 +1,18 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Switch;
+
 import com.nicolappli.mynews.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,6 +32,8 @@ public class NotificationsActivity extends AppCompatActivity {
     AppCompatCheckBox mCheckboxTravel;
     @BindView(R.id.switch_enable_notifications)
     Switch mSwitchEnableNotifications;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     public String[] CHECKBOX_VALUES = {"Arts", "Business", "Entrepreneurs", "Politics", "Sports", "Travel"};
     public CheckBox[] checkBoxes;
@@ -37,16 +44,15 @@ public class NotificationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
         ButterKnife.bind(this);
+
+        this.getPreferences();
+        this.configureToolbar();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mSwitchEnableNotifications.isChecked()) {
-            Log.i("Notif Tag", "Normalement ça s'enregistre dans le fichier de config...!");
-        }else{
-            Log.i("Notif Tag", "Ca marche pas mon pote !");
-        }
+        this.savePreferences();
     }
 
     public void onCheckboxClicked(View view) {
@@ -58,5 +64,43 @@ public class NotificationsActivity extends AppCompatActivity {
                 mCheckBoxStatus[i] = null;
             }
         }
+    }
+
+    public void configureToolbar() {
+        setSupportActionBar(mToolbar);
+        ActionBar ab = getSupportActionBar();
+        assert ab != null;
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void savePreferences(){
+        SharedPreferences.Editor editor = getSharedPreferences("PREFERENCES", MODE_PRIVATE).edit();
+        editor.putBoolean("arts", mCheckboxArts.isChecked());
+        editor.putBoolean("business", mCheckboxBusiness.isChecked());
+        editor.putBoolean("entrepreneurs", mCheckboxEntrepreneurs.isChecked());
+        editor.putBoolean("politics", mCheckboxPolitics.isChecked());
+        editor.putBoolean("sports", mCheckboxSports.isChecked());
+        editor.putBoolean("travel", mCheckboxTravel.isChecked());
+        editor.putBoolean("switch",mSwitchEnableNotifications.isChecked());
+        editor.apply();
+    }
+
+    public void getPreferences(){
+        SharedPreferences prefs= getSharedPreferences("PREFERENCES", MODE_PRIVATE);
+        if(prefs.getBoolean("arts", false))
+            mCheckboxArts.setChecked(true);
+        if(prefs.getBoolean("business", false))
+            mCheckboxBusiness.setChecked(true);
+        if(prefs.getBoolean("entrepreneurs", false))
+            mCheckboxEntrepreneurs.setChecked(true);
+        if(prefs.getBoolean("politics", false))
+            mCheckboxPolitics.setChecked(true);
+        if(prefs.getBoolean("sports", false))
+            mCheckboxSports.setChecked(true);
+        if(prefs.getBoolean("travel", false))
+            mCheckboxTravel.setChecked(true);
+        if(prefs.getBoolean("switch", false))
+            mSwitchEnableNotifications.setChecked(true);
+
     }
 }

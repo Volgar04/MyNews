@@ -1,19 +1,27 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.Util;
+
 import java.io.IOException;
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,24 +48,30 @@ public class SearchArticlesActivity extends AppCompatActivity {
     EditText mEditTextBeginDate;
     @BindView(R.id.edt_date_end)
     EditText mEditTextEndDate;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     public String[] CHECKBOX_VALUES = {"Arts", "Business", "Entrepreneurs", "Politics", "Sports", "Travel"};
-    public CheckBox[] checkBoxes ;
+    public CheckBox[] checkBoxes;
     public String[] mCheckBoxStatus = new String[6];
     public CheckBox[] mCheckBoxes;
     public String mQuery;
     public String mBeginDate, mEndDate;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_articles);
         ButterKnife.bind(this);
+
+        this.configureToolbar();
+
         // Initialise checkboxes list
         this.mCheckBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
 
         try {
-            Log.i("config","name : "+Util.getProperty("name",getApplicationContext()));
+            Log.i("config", "name : " + Util.getProperty("name", getApplicationContext()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,35 +79,21 @@ public class SearchArticlesActivity extends AppCompatActivity {
     }
 
     public void onCheckboxClicked(View view) {
-        checkBoxes = new CheckBox[] {mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
+        checkBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
         for (int i = 0; i < checkBoxes.length; i++) {
-            if(checkBoxes[i].isChecked()){
-                //Log.i("tag","checked : "+CHECKBOX_VALUES[i]);
+            if (checkBoxes[i].isChecked()) {
                 mCheckBoxStatus[i] = CHECKBOX_VALUES[i];
-                //Log.i("tag","arts : "+mCheckBoxStatus[0]);
-                //Log.i("tag","business : "+mCheckBoxStatus[1]);
-                //Log.i("tag","entrepreneurs : "+mCheckBoxStatus[2]);
-                //Log.i("tag","politics : "+mCheckBoxStatus[3]);
-                //Log.i("tag","sports : "+mCheckBoxStatus[4]);
-                //Log.i("tag","travel : "+mCheckBoxStatus[5]);
-            }else{
+            } else {
                 mCheckBoxStatus[i] = null;
-                //Log.i("tag","unchecked : "+CHECKBOX_VALUES[i]);
-                //Log.i("tag","arts : "+mCheckBoxStatus[0]);
-                //Log.i("tag","business : "+mCheckBoxStatus[1]);
-                //Log.i("tag","entrepreneurs : "+mCheckBoxStatus[2]);
-                //Log.i("tag","politics : "+mCheckBoxStatus[3]);
-                //Log.i("tag","sports : "+mCheckBoxStatus[4]);
-                //Log.i("tag","travel : "+mCheckBoxStatus[5]);
             }
         }
     }
 
-    public String getNewDesk(String[] strings){
+    public String getNewDesk(String[] strings) {
         StringBuilder res = new StringBuilder();
 
         for (String string : strings) {
-            if (string != null){
+            if (string != null) {
                 res.append("\"");
                 res.append(string);
                 res.append("\" ");
@@ -113,17 +113,14 @@ public class SearchArticlesActivity extends AppCompatActivity {
     public void onViewClickedSearch() {
         getQueryAndDates();
         String errorText;
-        if(!getNewDesk(mCheckBoxStatus).isEmpty() && !mQuery.isEmpty()){
-            Log.i("SearchArticles Tag", "Query : " + mQuery);
-            Log.i("SearchArticles Tag", "getNewDesk : " + getNewDesk(mCheckBoxStatus));
+        if (!getNewDesk(mCheckBoxStatus).isEmpty() && !mQuery.isEmpty()) {
             String[] values = {mQuery, getNewDesk(mCheckBoxStatus), mBeginDate, mEndDate};
 
             Intent searchResultsActivity = new Intent(SearchArticlesActivity.this, SearchResultsActivity.class);
-            searchResultsActivity.putExtra("VALUES_SEARCH_ARTICLES",values);
+            searchResultsActivity.putExtra("VALUES_SEARCH_ARTICLES", values);
             startActivity(searchResultsActivity);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
-            Log.i("SearchArticles Tag", "il y a eu un problème : " + mQuery);
-            Log.i("SearchArticles Tag", "getNewDesk false : " + getNewDesk(mCheckBoxStatus));
             errorText = "Il faut écrire du text dans la barre de recherche";
             this.alertDialogError(errorText);
         }
@@ -145,5 +142,12 @@ public class SearchArticlesActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+    }
+
+    public void configureToolbar() {
+        setSupportActionBar(mToolbar);
+        ActionBar ab = getSupportActionBar();
+        assert ab != null;
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 }

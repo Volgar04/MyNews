@@ -5,12 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.nicolappli.mynews.Controllers.Fragments.ArtsPageFragment;
 import com.nicolappli.mynews.Controllers.Fragments.MostPopularPageFragment;
 import com.nicolappli.mynews.Controllers.Fragments.TopStoriesPageFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
     //public static final String[] topStoriesSection={"home", "", "business"};
-    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR"};
+    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS"};
 
     // Default Constructor
     public PageAdapter(FragmentManager mgr){
@@ -29,6 +30,8 @@ public class PageAdapter extends FragmentPagerAdapter {
                 return TopStoriesPageFragment.newInstance();
             case 1: // Page number 2
                 return MostPopularPageFragment.newInstance();
+            case 2:
+                return ArtsPageFragment.newInstance();
             default:
                 return null;
         }
@@ -42,6 +45,8 @@ public class PageAdapter extends FragmentPagerAdapter {
                 return "TOP STORIES";
             case 1: // Page number 2
                 return "MOST POPULAR";
+            case 2:
+                return "ARTS";
             default:
                 return null;
         }

@@ -1,8 +1,6 @@
 package com.nicolappli.mynews.Utils;
 
-import com.nicolappli.mynews.Models.NYTMostPopular;
-import com.nicolappli.mynews.Models.NYTSearchArticles;
-import com.nicolappli.mynews.Models.NYTTopStories;
+import com.nicolappli.mynews.Models.NewYorkTimesAPI;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -16,13 +14,13 @@ public interface NYTService {
     //String apiKey = "AHGAejtcPdRPUyAnADLIR4H6g7nLW4E6";
 
     @GET("topstories/v2/{section}.json?api-key=AHGAejtcPdRPUyAnADLIR4H6g7nLW4E6")
-    Observable<NYTTopStories> getTopStories(@Path("section") String section);
+    Observable<NewYorkTimesAPI> getTopStories(@Path("section") String section);
 
     @GET("mostpopular/v2/shared/1.json?api-key=AHGAejtcPdRPUyAnADLIR4H6g7nLW4E6")
-    Observable<NYTMostPopular> getMostPopular();
+    Observable<NewYorkTimesAPI> getMostPopular();
 
     @GET("search/v2/articlesearch.json?fl=web_url,snippet,pub_date,news_desk,multimedia,document_type,type_of_material&page=3&sort=newest&api-key=AHGAejtcPdRPUyAnADLIR4H6g7nLW4E6")
-    Observable<NYTSearchArticles> getSearchArticle(@Query("q") String query,
+    Observable<NewYorkTimesAPI> getSearchArticle(@Query("q") String query,
                                                    @Query("fq") String news_desk);
 
     Retrofit retrofit = new Retrofit.Builder()

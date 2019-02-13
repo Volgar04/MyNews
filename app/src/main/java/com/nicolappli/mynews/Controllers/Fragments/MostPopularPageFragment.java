@@ -1,5 +1,6 @@
 package com.nicolappli.mynews.Controllers.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
-import com.nicolappli.mynews.Adapters.RecyclerViewAdapterMostPopular;
-import com.nicolappli.mynews.Models.NYTMostPopular;
+import com.nicolappli.mynews.Adapters.RecyclerViewAdapter;
+import com.nicolappli.mynews.Controllers.Activities.ShowArticleActivity;
+import com.nicolappli.mynews.Models.NewYorkTimesAPI;
 import com.nicolappli.mynews.R;
+import com.nicolappli.mynews.Utils.ItemClickSupport;
 import com.nicolappli.mynews.Utils.NYTStreams;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,8 @@ public class MostPopularPageFragment extends Fragment {
 
     // FOR DATA
     private Disposable mDisposable;
-    private RecyclerViewAdapterMostPopular mAdapter;
-    private List<NYTMostPopular.Result> mMostPopularArray = new ArrayList<>();
+    private RecyclerViewAdapter mAdapter;
+    private List<NewYorkTimesAPI.Result> mMostPopularArray = new ArrayList<>();
 
     public MostPopularPageFragment() { }
 
@@ -52,6 +55,7 @@ public class MostPopularPageFragment extends Fragment {
         this.buildRecyclerView();
         this.configureSwipeRefreshLayout();
         this.executeHttpRequestWithRetrofit();
+        this.configureOnClickRecyclerView();
         return rootView;
     }
 
@@ -62,11 +66,29 @@ public class MostPopularPageFragment extends Fragment {
     }
 
     // --------------------
+    // ACTION
+    // --------------------
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(mRecyclerView,R.layout.recycler_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        NewYorkTimesAPI.Result url = mAdapter.getUrl(position);
+                        String value = url.getUrl();
+                        Intent showArticleActivity = new Intent(getActivity(), ShowArticleActivity.class);
+                        showArticleActivity.putExtra("VALUE_URL_ARTICLE",value);
+                        startActivity(showArticleActivity);
+                    }
+                });
+    }
+
+    // --------------------
     // CONFIGURATION
     // --------------------
 
     private void buildRecyclerView(){
-        this.mAdapter = new RecyclerViewAdapterMostPopular(mMostPopularArray, Glide.with(this));
+        this.mAdapter = new RecyclerViewAdapter(mMostPopularArray, Glide.with(this));
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setAdapter(mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -86,9 +108,9 @@ public class MostPopularPageFragment extends Fragment {
     // --------------------
 
     public void executeHttpRequestWithRetrofit(){
-        this.mDisposable = NYTStreams.streamFetchMostPopular().subscribeWith(new DisposableObserver<NYTMostPopular>() {
+        this.mDisposable = NYTStreams.streamFetchMostPopular().subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
             @Override
-            public void onNext(NYTMostPopular mostPopular) {
+            public void onNext(NewYorkTimesAPI mostPopular) {
                 Log.i("MostPopular Tag", "On Next");
                 updateMostPopularUI(mostPopular);
             }
@@ -113,7 +135,7 @@ public class MostPopularPageFragment extends Fragment {
     // UPDATE UI
     // --------------------
 
-    private void updateMostPopularUI(NYTMostPopular mostPopular){
+    private void updateMostPopularUI(NewYorkTimesAPI mostPopular){
         this.mSwipeRefreshLayout.setRefreshing(false);
         this.mMostPopularArray.clear();
         this.mMostPopularArray.addAll(mostPopular.getResults());
