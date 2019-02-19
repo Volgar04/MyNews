@@ -22,8 +22,8 @@ public class NotificationsActivity extends AppCompatActivity {
     AppCompatCheckBox mCheckboxArts;
     @BindView(R.id.checkbox_business)
     AppCompatCheckBox mCheckboxBusiness;
-    @BindView(R.id.checkbox_entrepreneurs)
-    AppCompatCheckBox mCheckboxEntrepreneurs;
+    @BindView(R.id.checkbox_science)
+    AppCompatCheckBox mCheckboxScience;
     @BindView(R.id.checkbox_politics)
     AppCompatCheckBox mCheckboxPolitics;
     @BindView(R.id.checkbox_sports)
@@ -34,10 +34,6 @@ public class NotificationsActivity extends AppCompatActivity {
     Switch mSwitchEnableNotifications;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    public String[] CHECKBOX_VALUES = {"Arts", "Business", "Entrepreneurs", "Politics", "Sports", "Travel"};
-    public CheckBox[] checkBoxes;
-    public String[] mCheckBoxStatus = new String[6];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +52,6 @@ public class NotificationsActivity extends AppCompatActivity {
     }
 
     public void onCheckboxClicked(View view) {
-        checkBoxes = new CheckBox[]{mCheckboxArts, mCheckboxBusiness, mCheckboxEntrepreneurs, mCheckboxPolitics, mCheckboxSports, mCheckboxTravel};
-        for (int i = 0; i < checkBoxes.length; i++) {
-            if (checkBoxes[i].isChecked()) {
-                mCheckBoxStatus[i] = CHECKBOX_VALUES[i];
-            } else {
-                mCheckBoxStatus[i] = null;
-            }
-        }
     }
 
     public void configureToolbar() {
@@ -77,7 +65,7 @@ public class NotificationsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("PREFERENCES", MODE_PRIVATE).edit();
         editor.putBoolean("arts", mCheckboxArts.isChecked());
         editor.putBoolean("business", mCheckboxBusiness.isChecked());
-        editor.putBoolean("entrepreneurs", mCheckboxEntrepreneurs.isChecked());
+        editor.putBoolean("entrepreneurs", mCheckboxScience.isChecked());
         editor.putBoolean("politics", mCheckboxPolitics.isChecked());
         editor.putBoolean("sports", mCheckboxSports.isChecked());
         editor.putBoolean("travel", mCheckboxTravel.isChecked());
@@ -92,7 +80,7 @@ public class NotificationsActivity extends AppCompatActivity {
         if(prefs.getBoolean("business", false))
             mCheckboxBusiness.setChecked(true);
         if(prefs.getBoolean("entrepreneurs", false))
-            mCheckboxEntrepreneurs.setChecked(true);
+            mCheckboxScience.setChecked(true);
         if(prefs.getBoolean("politics", false))
             mCheckboxPolitics.setChecked(true);
         if(prefs.getBoolean("sports", false))
@@ -101,6 +89,5 @@ public class NotificationsActivity extends AppCompatActivity {
             mCheckboxTravel.setChecked(true);
         if(prefs.getBoolean("switch", false))
             mSwitchEnableNotifications.setChecked(true);
-
     }
 }

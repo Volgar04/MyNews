@@ -37,8 +37,8 @@ class NYTViewHolder extends RecyclerView.ViewHolder {
         if((result.getSection()!=null)&&(!result.getSection().isEmpty())){
             this.txtSectionArticle.setText(result.getSection());
             // set subsection if possible
-            if ((result.getSubsection() != null) && (!result.getSubsection().isEmpty()))
-                this.txtTitleArticle.setText(result.getSection()+" > "+result.getSubsection());
+            //if ((result.getSubsection() != null) && (!result.getSubsection().isEmpty()))
+            //    this.txtTitleArticle.setText(result.getSection()+" > "+result.getSubsection());
         }else
             this.txtSectionArticle.setText(result.getNewsDesk());
 
@@ -57,11 +57,11 @@ class NYTViewHolder extends RecyclerView.ViewHolder {
         // set image
         if ((result.getMultimedia() != null) && (!result.getMultimedia().isEmpty())){
             if(result.getMultimedia().get(0).getUrl().substring(0,5).equals("https")) {
-                glide.load(result.getMultimedia().get(0).getUrl()).into(imageArticle);
+                glide.load(result.getMultimedia().get(1).getUrl()).into(imageArticle);
             }else{
-                glide.load("https://static01.nyt.com/"+result.getMultimedia().get(0).getUrl()).into(imageArticle);
+                glide.load("https://static01.nyt.com/"+result.getMultimedia().get(11).getUrl()).into(imageArticle);
             }
         }else if(result.getMedia() !=null&&!result.getMedia().isEmpty()&&result.getMedia().get(0).getMediaMetadata()!=null&&!result.getMedia().get(0).getMediaMetadata().isEmpty())
-            glide.load(result.getMedia().get(0).getMediaMetadata().get(0).getUrl()).into(imageArticle);
+            glide.load(result.getMedia().get(0).getMediaMetadata().get(1).getUrl()).into(imageArticle);
     }
 }

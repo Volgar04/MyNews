@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@id/checkbox_arts"/>
 
     <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/checkbox_entrepreneurs"
+        android:id="@+id/checkbox_science"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -57,14 +57,14 @@
         android:onClick="onCheckboxClicked" />
 
     <TextView
-        android:id="@+id/txt_entrepreneurs"
+        android:id="@+id/txt_science"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Entrepreneurs"
+        android:text="Science"
         android:textSize="17sp"
         android:padding="4dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toRightOf="@id/checkbox_entrepreneurs"
+        app:layout_constraintLeft_toRightOf="@id/checkbox_science"
         app:layout_constraintTop_toBottomOf="@+id/checkbox_business"/>
 
     <!-- CheckBox and TextView Right -->
@@ -138,7 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.052083332" />
+        app:layout_constraintGuide_percent="0.05" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_95"

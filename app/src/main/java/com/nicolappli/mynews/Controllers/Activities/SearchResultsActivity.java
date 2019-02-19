@@ -51,9 +51,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         this.configureSwipeRefreshLayout();
         this.executeHttpRequestWithRetrofit();
         this.configureOnClickRecyclerView();
-
-        //String[] mValues=getIntent().getStringArrayExtra("VALUES_SEARCH_ARTICLES");
-        //Log.i("SearchResult Tag", "query : "+mValues[0]);
     }
 
     @Override
@@ -108,7 +105,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
 
         //this.mDisposable = NYTStreams.streamFetchSearchArticles(mValues[0],"news_desk:("+ mValues[1] +")", mValues[2], mValues[3]).subscribeWith(new DisposableObserver<NYTSearchArticles>() {
-        this.mDisposable = NYTStreams.streamFetchSearchArticles(mValues[0], "news_desk:(" + mValues[1] + ")").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
+        this.mDisposable = NYTStreams.streamFetchSearchArticles(mValues[0], "news_desk:(" + mValues[1] + ")", mValues[2], mValues[3]).subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
             @Override
             public void onNext(NewYorkTimesAPI searchArticles) {
                 Log.i("SearchResult Tag", "On Next");

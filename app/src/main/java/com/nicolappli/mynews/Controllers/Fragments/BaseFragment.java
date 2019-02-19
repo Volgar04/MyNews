@@ -3,11 +3,11 @@ package com.nicolappli.mynews.Controllers.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,46 +17,40 @@ import com.nicolappli.mynews.Controllers.Activities.ShowArticleActivity;
 import com.nicolappli.mynews.Models.NewYorkTimesAPI;
 import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.ItemClickSupport;
-import com.nicolappli.mynews.Utils.NYTStreams;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopStoriesPageFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     // FOR DESIGN
-    @BindView(R.id.recycler_view_top_stories)
-            RecyclerView mRecyclerView;
-    @BindView(R.id.swipe_refresh_layout_top_stories)
-            SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recycler_view_base)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout_base)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     // FOR DATA
-    private Disposable mDisposable;
-    private RecyclerViewAdapter mAdapter;
-    private List<NewYorkTimesAPI.Result> mTopStoriesArray = new ArrayList<>();
+    public Disposable mDisposable;
+    public RecyclerViewAdapter mAdapter;
+    public List<NewYorkTimesAPI.Result> mArray = new ArrayList<>();
 
-    public TopStoriesPageFragment() { }
+    protected abstract void executeHttpRequestWithRetrofit();
+    //protected abstract void updateUI(NewYorkTimesAPI result);
 
-    public static TopStoriesPageFragment newInstance(){
-        return new TopStoriesPageFragment();
-    }
-
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_top_stories_page, container, false);
-        ButterKnife.bind(this, rootView);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_base, container, false);
+        ButterKnife.bind(this, view);
         this.buildRecyclerView();
         this.configureSwipeRefreshLayout();
         this.executeHttpRequestWithRetrofit();
         this.configureOnClickRecyclerView();
-        return rootView;
+        return(view);
     }
 
     @Override
@@ -69,13 +63,17 @@ public class TopStoriesPageFragment extends Fragment {
     // ACTION
     // --------------------
 
-    private void configureOnClickRecyclerView(){
+    public void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(mRecyclerView,R.layout.recycler_view_item)
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         NewYorkTimesAPI.Result url = mAdapter.getUrl(position);
-                        String value = url.getUrl();
+                        String value = null;
+                        if(url.getUrl()!=null && !url.getUrl().isEmpty())
+                            value = url.getUrl();
+                        else if(url.getWebUrl()!=null && !url.getWebUrl().isEmpty())
+                            value = url.getWebUrl();
                         Intent showArticleActivity = new Intent(getActivity(), ShowArticleActivity.class);
                         showArticleActivity.putExtra("VALUE_URL_ARTICLE",value);
                         startActivity(showArticleActivity);
@@ -87,14 +85,14 @@ public class TopStoriesPageFragment extends Fragment {
     // CONFIGURATION
     // --------------------
 
-    private void buildRecyclerView(){
-        this.mAdapter = new RecyclerViewAdapter(mTopStoriesArray, Glide.with(this));
+    public void buildRecyclerView(){
+        this.mAdapter = new RecyclerViewAdapter(mArray, Glide.with(this));
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setAdapter(mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void configureSwipeRefreshLayout(){
+    public void configureSwipeRefreshLayout(){
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,38 +105,21 @@ public class TopStoriesPageFragment extends Fragment {
     // HTTP (RxJAVA)
     // --------------------
 
-    public void executeHttpRequestWithRetrofit(){
-        this.mDisposable = NYTStreams.streamFetchTopStories("home").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
-            @Override
-            public void onNext(NewYorkTimesAPI topStories) {
-                Log.i("TopStories Tag", "On Next");
-                updateTopStoriesUI(topStories);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e("TopStories Tag", "On Error" + Log.getStackTraceString(e).toUpperCase());
-            }
-
-            @Override
-            public void onComplete() {
-                Log.i("TopStories Tag", "On Complete !");
-            }
-        });
-    }
-
-    private void disposeWhenDestroy() {
+    public void disposeWhenDestroy() {
         if(this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 
-    // --------------------
-    // UPDATE UI
-    // --------------------
-
-    private void updateTopStoriesUI(NewYorkTimesAPI topStories){
+    public void updateUI(NewYorkTimesAPI result) {
         mSwipeRefreshLayout.setRefreshing(false);
-        this.mTopStoriesArray.clear();
-        this.mTopStoriesArray.addAll(topStories.getResults());
+        mArray.clear();
+        mArray.addAll(result.getResults());
+        this.mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateSearchResultUI(NewYorkTimesAPI searchArticles) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        this.mArray.clear();
+        this.mArray.addAll(searchArticles.getResponse().getDocs());
         this.mAdapter.notifyDataSetChanged();
     }
 }

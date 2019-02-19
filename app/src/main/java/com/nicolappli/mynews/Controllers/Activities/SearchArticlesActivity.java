@@ -33,8 +33,8 @@ public class SearchArticlesActivity extends AppCompatActivity {
     CheckBox mCheckBoxArts;
     @BindView(R.id.checkbox_business)
     CheckBox mCheckBoxBusiness;
-    @BindView(R.id.checkbox_entrepreneurs)
-    CheckBox mCheckBoxEntrepreneurs;
+    @BindView(R.id.checkbox_science)
+    CheckBox mCheckBoxScience;
     @BindView(R.id.checkbox_politics)
     CheckBox mCheckBoxPolitics;
     @BindView(R.id.checkbox_sports)
@@ -51,7 +51,7 @@ public class SearchArticlesActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    public String[] CHECKBOX_VALUES = {"Arts", "Business", "Entrepreneurs", "Politics", "Sports", "Travel"};
+    public String[] CHECKBOX_VALUES = {"Arts", "Business", "Science", "Politics", "Sports", "Travel"};
     public CheckBox[] checkBoxes;
     public String[] mCheckBoxStatus = new String[6];
     public CheckBox[] mCheckBoxes;
@@ -68,18 +68,11 @@ public class SearchArticlesActivity extends AppCompatActivity {
         this.configureToolbar();
 
         // Initialise checkboxes list
-        this.mCheckBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
-
-        try {
-            Log.i("config", "name : " + Util.getProperty("name", getApplicationContext()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        this.mCheckBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxScience, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
     }
 
     public void onCheckboxClicked(View view) {
-        checkBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxEntrepreneurs, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
+        checkBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxScience, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
         for (int i = 0; i < checkBoxes.length; i++) {
             if (checkBoxes[i].isChecked()) {
                 mCheckBoxStatus[i] = CHECKBOX_VALUES[i];

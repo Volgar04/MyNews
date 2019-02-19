@@ -5,16 +5,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.nicolappli.mynews.Controllers.Fragments.ArtsPageFragment;
-import com.nicolappli.mynews.Controllers.Fragments.MostPopularPageFragment;
-import com.nicolappli.mynews.Controllers.Fragments.TopStoriesPageFragment;
+import com.nicolappli.mynews.Controllers.Fragments.ArtsFragment;
+import com.nicolappli.mynews.Controllers.Fragments.BusinessFragment;
+import com.nicolappli.mynews.Controllers.Fragments.ScienceFragment;
+import com.nicolappli.mynews.Controllers.Fragments.MostPopularFragment;
+import com.nicolappli.mynews.Controllers.Fragments.PoliticsFragment;
+import com.nicolappli.mynews.Controllers.Fragments.SportsFragment;
+import com.nicolappli.mynews.Controllers.Fragments.TopStoriesFragment;
+import com.nicolappli.mynews.Controllers.Fragments.TravelFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
-    //public static final String[] topStoriesSection={"home", "", "business"};
-    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS"};
+    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS", "SCIENCE", "POLITICS", "SPORTS", "TRAVEL"};
 
     // Default Constructor
-    public PageAdapter(FragmentManager mgr){
+    protected PageAdapter(FragmentManager mgr){
         super(mgr);
     }
 
@@ -26,12 +30,22 @@ public class PageAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position){
-            case 0: // Page number 1
-                return TopStoriesPageFragment.newInstance();
-            case 1: // Page number 2
-                return MostPopularPageFragment.newInstance();
+            case 0:
+                return TopStoriesFragment.newInstance();
+            case 1:
+                return MostPopularFragment.newInstance();
             case 2:
-                return ArtsPageFragment.newInstance();
+                return ArtsFragment.newInstance();
+            case 3:
+                return BusinessFragment.newInstance();
+            case 4:
+                return ScienceFragment.newInstance();
+            case 5:
+                return PoliticsFragment.newInstance();
+            case 6:
+                return SportsFragment.newInstance();
+            case 7:
+                return TravelFragment.newInstance();
             default:
                 return null;
         }
@@ -40,15 +54,6 @@ public class PageAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0: // Page number 1
-                return "TOP STORIES";
-            case 1: // Page number 2
-                return "MOST POPULAR";
-            case 2:
-                return "ARTS";
-            default:
-                return null;
-        }
+        return tabTitle[position];
     }
 }
