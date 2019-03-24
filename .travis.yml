@@ -7,7 +7,6 @@ env:
    - EMULATOR_API_LEVEL=22
    - ANDROID_BUILD_TOOLS_VERSION=27.0.3
    - ANDROID_ABI=armeabi-v7a
-   - CODECOV_TOKEN="6e74a1fa-9edf-4931-9bc5-1b607b41a4ac"
 
 android:
   components:
