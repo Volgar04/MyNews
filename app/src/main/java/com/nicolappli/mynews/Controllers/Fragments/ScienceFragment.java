@@ -20,7 +20,7 @@ public class ScienceFragment extends BaseFragment {
 
     @Override
     protected void executeHttpRequestWithRetrofit() {
-        this.mDisposable = NYTStreams.streamFetchSection("news_desk:(\"Science\")").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
+        this.mDisposable = NYTStreams.streamFetchSection("news_desk:(\"Science\")","0").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
             @Override
             public void onNext(NewYorkTimesAPI result) {
                 Log.i("TopStories Tag", "On Next");

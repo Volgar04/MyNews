@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import com.nicolappli.mynews.Controllers.Fragments.ArtsFragment;
 import com.nicolappli.mynews.Controllers.Fragments.BusinessFragment;
 import com.nicolappli.mynews.Controllers.Fragments.ScienceFragment;
@@ -15,16 +14,16 @@ import com.nicolappli.mynews.Controllers.Fragments.TopStoriesFragment;
 import com.nicolappli.mynews.Controllers.Fragments.TravelFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
-    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS", "SCIENCE", "POLITICS", "SPORTS", "TRAVEL"};
+    //private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS", "SCIENCE", "POLITICS", "SPORTS", "TRAVEL"};
 
     // Default Constructor
-    protected PageAdapter(FragmentManager mgr){
+    public PageAdapter(FragmentManager mgr){
         super(mgr);
     }
 
     @Override
     public int getCount() {
-        return tabTitle.length; // Number of page to show
+        return 8; // Number of page to show
     }
 
     @Override
@@ -49,11 +48,5 @@ public class PageAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return tabTitle[position];
     }
 }

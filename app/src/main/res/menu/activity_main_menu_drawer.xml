@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/activity_main_drawer_top_stories"
+            android:icon="@drawable/ic_top_stories"
+            android:title="Top Stories"/>
+        <item
+            android:id="@+id/activity_main_drawer_most_popular"
+            android:icon="@drawable/ic_most_popular"
+            android:title="Most Popular"/>
+        <item
+            android:id="@+id/activity_main_drawer_search_articles"
+            android:icon="@drawable/ic_search"
+            android:title="Search Articles"/>
+    </group>
+
+    <item android:title="Categories">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/activity_main_drawer_arts"
+                    android:icon="@drawable/ic_arts"
+                    android:title="Arts"/>
+                <item
+                    android:id="@+id/activity_main_drawer_Business"
+                    android:icon="@drawable/ic_business"
+                    android:title="Business"/>
+                <item
+                    android:id="@+id/activity_main_drawer_sciences"
+                    android:icon="@drawable/ic_sciences"
+                    android:title="Science"/>
+                <item
+                    android:id="@+id/activity_main_drawer_politics"
+                    android:icon="@drawable/ic_politic"
+                    android:title="Politics"/>
+                <item
+                    android:id="@+id/activity_main_drawer_sports"
+                    android:icon="@drawable/ic_sport"
+                    android:title="Sports"/>
+                <item
+                    android:id="@+id/activity_main_drawer_travel"
+                    android:icon="@drawable/ic_travel"
+                    android:title="Travel"/>
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Settings">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/activity_main_drawer_notifications"
+                    android:icon="@drawable/ic_notifications"
+                    android:title="Notifications"/>
+                <item
+                    android:id="@+id/activity_main_drawer_about"
+                    android:icon="@drawable/ic_about"
+                    android:title="About"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

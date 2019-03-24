@@ -18,8 +18,11 @@ import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.ItemClickSupport;
 import com.nicolappli.mynews.Utils.NYTStreams;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,20 +62,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         this.disposeWhenDestroy();
     }
 
-    private void configureOnClickRecyclerView() {
-        ItemClickSupport.addTo(mRecyclerView, R.layout.recycler_view_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        NewYorkTimesAPI.Result url = mAdapter.getUrl(position);
-                        String value = url.getWebUrl();
-                        Intent showArticleActivity = new Intent(SearchResultsActivity.this, ShowArticleActivity.class);
-                        showArticleActivity.putExtra("VALUE_URL_ARTICLE", value);
-                        startActivity(showArticleActivity);
-                        overridePendingTransition(R.anim.enter, R.anim.exit);
-                    }
-                });
-    }
+
 
     // --------------------
     // CONFIGURATION
@@ -94,17 +84,28 @@ public class SearchResultsActivity extends AppCompatActivity {
         });
     }
 
+    //configure click on recycler's view item
+    private void configureOnClickRecyclerView() {
+        ItemClickSupport.addTo(mRecyclerView, R.layout.recycler_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        NewYorkTimesAPI.Result url = mAdapter.getUrl(position);
+                        String value = url.getWebUrl();
+                        Intent showArticleActivity = new Intent(SearchResultsActivity.this, ShowArticleActivity.class);
+                        showArticleActivity.putExtra("VALUE_URL_ARTICLE", value);
+                        startActivity(showArticleActivity);
+                    }
+                });
+    }
+
     // --------------------
     // HTTP (RxJAVA)
     // --------------------
 
     public void executeHttpRequestWithRetrofit() {
         String[] mValues = getIntent().getStringArrayExtra("VALUES_SEARCH_ARTICLES");
-        Log.i("SearchResult Tag", "begin date length : " + mValues[2].length());
-        Log.i("SearchResult Tag", "end date length : " + mValues[3].length());
 
-
-        //this.mDisposable = NYTStreams.streamFetchSearchArticles(mValues[0],"news_desk:("+ mValues[1] +")", mValues[2], mValues[3]).subscribeWith(new DisposableObserver<NYTSearchArticles>() {
         this.mDisposable = NYTStreams.streamFetchSearchArticles(mValues[0], "news_desk:(" + mValues[1] + ")", mValues[2], mValues[3]).subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
             @Override
             public void onNext(NewYorkTimesAPI searchArticles) {

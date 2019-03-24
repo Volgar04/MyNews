@@ -26,7 +26,7 @@ public class BusinessFragment extends BaseFragment {
 
     @Override
     protected void executeHttpRequestWithRetrofit() {
-        this.mDisposable = NYTStreams.streamFetchSection("news_desk:(\"Business\")").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
+        this.mDisposable = NYTStreams.streamFetchSection("news_desk:(\"Business\")","0").subscribeWith(new DisposableObserver<NewYorkTimesAPI>() {
             @Override
             public void onNext(NewYorkTimesAPI result) {
                 Log.i("TopStories Tag", "On Next");

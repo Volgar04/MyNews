@@ -25,7 +25,7 @@ public class FragmentTest {
 
         NewYorkTimesAPI resultsFetched = testObserver.values().get(0);
 
-        assertThat("The result of Top Stories is bigger than 0.",!resultsFetched.getResults().equals(0));
+        assertThat("The result of Top Stories is bigger than 0.",resultsFetched.getResults().size()!=0);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class FragmentTest {
 
         NewYorkTimesAPI resultsFetched = testObserver.values().get(0);
 
-        assertThat("The result of Most Popular is bigger than 0.",!resultsFetched.getResults().equals(0));
+        assertThat("The result of Most Popular is bigger than 0.",resultsFetched.getResults().size()!=0);
     }
 
     @Test
@@ -57,6 +57,6 @@ public class FragmentTest {
 
         NewYorkTimesAPI resultsFetched = testObserver.values().get(0);
 
-        assertThat("The result of Search Articles is bigger than 0.",!resultsFetched.getResponse().equals(0));
+        assertThat("The result of Search Articles is bigger than 0.",resultsFetched.getResponse().equals(0));
     }
 }

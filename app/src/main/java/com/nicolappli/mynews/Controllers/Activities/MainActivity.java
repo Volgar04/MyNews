@@ -1,31 +1,31 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.nicolappli.mynews.Adapters.PageAdapter;
 import com.nicolappli.mynews.R;
-import com.nicolappli.mynews.Utils.MyAlarmReceiver;
-import com.nicolappli.mynews.Utils.Util;
 
-import java.io.IOException;
-import java.util.Objects;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-public class MainActivity extends AppCompatActivity {
+    //FOR DESIGN
+    private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
+    private ViewPager mViewPager;
 
-    private PendingIntent mPendingIntent;
+    //FOR FRAGMENTS
+    private String tabTitle[] = {"TOP STORIES", "MOST POPULAR", "ARTS", "BUSINESS", "SCIENCE", "POLITICS", "SPORTS", "TRAVEL"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,64 @@ public class MainActivity extends AppCompatActivity {
 
         this.configureToolbar();
         this.configureViewPagerAndTabs();
-        //this.configureAlarmManager();
-        //this.startAlarm();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch(id){
+            case R.id.activity_main_drawer_top_stories :
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.activity_main_drawer_most_popular:
+                mViewPager.setCurrentItem(1);
+                break;
+            case R.id.activity_main_drawer_search_articles:
+                Intent searchArticlesActivity = new Intent(MainActivity.this, SearchArticlesActivity.class);
+                startActivity(searchArticlesActivity);
+                break;
+            case R.id.activity_main_drawer_arts:
+                mViewPager.setCurrentItem(2);
+                break;
+            case R.id.activity_main_drawer_Business:
+                mViewPager.setCurrentItem(3);
+                break;
+            case R.id.activity_main_drawer_sciences:
+                mViewPager.setCurrentItem(4);
+                break;
+            case R.id.activity_main_drawer_politics:
+                mViewPager.setCurrentItem(5);
+                break;
+            case R.id.activity_main_drawer_sports:
+                mViewPager.setCurrentItem(6);
+                break;
+            case R.id.activity_main_drawer_travel:
+                mViewPager.setCurrentItem(7);
+                break;
+            case R.id.activity_main_drawer_notifications:
+                Intent notificationsActivity = new Intent(MainActivity.this, NotificationsActivity.class);
+                startActivity(notificationsActivity);
+                break;
+            case R.id.activity_main_drawer_about:
+                break;
+            default:
+                break;
+        }
+
+        this.mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -59,16 +114,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_activity_main_notifications:
                 Intent notificationsActivity = new Intent(MainActivity.this, NotificationsActivity.class);
                 startActivity(notificationsActivity);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
                 return true;
             case R.id.menu_activity_main_search:
                 Intent searchArticlesActivity = new Intent(MainActivity.this, SearchArticlesActivity.class);
                 startActivity(searchArticlesActivity);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
                 return true;
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -77,55 +129,50 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureToolbar(){
         // Get the toolbar view inside the activity
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        this.mToolbar = findViewById(R.id.toolbar);
         // Sets the Toolbar
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
     }
 
     private void configureViewPagerAndTabs(){
-        // Get ViewPager from layout
-        ViewPager pager = findViewById(R.id.activity_main_viewpager);
-        // Set Adapter PageAdapter and glue it together
-        pager.setAdapter(new PageAdapter(getSupportFragmentManager()) {
+        TabLayout tabLayout = findViewById(R.id.activity_main_tabs);
+        for (int i = 0; i < 8; i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(tabTitle[i]));
+        }
+        tabLayout.setTabMode(TabLayout.GRAVITY_FILL);
+
+        PageAdapter pageAdapter = new PageAdapter(getSupportFragmentManager());
+        mViewPager=findViewById(R.id.activity_main_viewpager);
+        mViewPager.setAdapter(pageAdapter);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
         });
-        // Get TabLayout from layout
-        TabLayout tabs= findViewById(R.id.activity_main_tabs);
-        // Glue TabLayout and ViewPager together
-        tabs.setupWithViewPager(pager);
-        // Design purpose. Tabs have the same width
-        tabs.setTabMode(TabLayout.GRAVITY_FILL);
     }
 
-    private void configureAlarmManager(){
-        Intent alarmIntent = new Intent(MainActivity.this, MyAlarmReceiver.class);
-        mPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    private void configureDrawerLayout(){
+        this.mDrawerLayout= findViewById(R.id.activity_main_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
-    private void startAlarm(){
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        assert manager != null;
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,0,AlarmManager.INTERVAL_FIFTEEN_MINUTES,mPendingIntent);
-        Toast.makeText(this, "Alarm set !", Toast.LENGTH_SHORT).show();
+    private void configureNavigationView(){
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
-
-    //public void getPreferences(){
-    //    SharedPreferences prefs= getSharedPreferences("PREFERENCES", MODE_PRIVATE);
-    //    prefs.getString("arts", null);
-    //    prefs.getString("business", null);
-    //    prefs.getString("entrepreneurs", null);
-    //    prefs.getString("politics", null);
-    //    prefs.getString("sports", null);
-    //    prefs.getString("travel", null);
-    //    prefs.getBoolean("switch", false);
-//
-    //    Log.i("preferencestag", "arts : "+prefs.getString("arts", null));
-    //    Log.i("preferencestag", "business : "+prefs.getString("business", null));
-    //    Log.i("preferencestag", "entrepreneurs : "+prefs.getString("entrepreneurs", null));
-    //    Log.i("preferencestag", "politics : "+prefs.getString("politics", null));
-    //    Log.i("preferencestag", "sports : "+prefs.getString("sports", null));
-    //    Log.i("preferencestag", "travel : "+prefs.getString("travel", null));
-    //    Log.i("preferencestag", "switch : "+prefs.getBoolean("switch", false));
-    //}
-
-
 }

@@ -39,7 +39,6 @@ public abstract class BaseFragment extends Fragment {
     public List<NewYorkTimesAPI.Result> mArray = new ArrayList<>();
 
     protected abstract void executeHttpRequestWithRetrofit();
-    //protected abstract void updateUI(NewYorkTimesAPI result);
 
     @Nullable
     @Override
@@ -63,6 +62,7 @@ public abstract class BaseFragment extends Fragment {
     // ACTION
     // --------------------
 
+    //When the user click on an item, a new activity is launched with the content of the article corresponding to the item
     public void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(mRecyclerView,R.layout.recycler_view_item)
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -70,9 +70,9 @@ public abstract class BaseFragment extends Fragment {
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         NewYorkTimesAPI.Result url = mAdapter.getUrl(position);
                         String value = null;
-                        if(url.getUrl()!=null && !url.getUrl().isEmpty())
+                        if(url.getUrl()!=null && !url.getUrl().isEmpty()) //get the good url for Top Stories and Most Popular
                             value = url.getUrl();
-                        else if(url.getWebUrl()!=null && !url.getWebUrl().isEmpty())
+                        else if(url.getWebUrl()!=null && !url.getWebUrl().isEmpty())//get the good url for Search Article
                             value = url.getWebUrl();
                         Intent showArticleActivity = new Intent(getActivity(), ShowArticleActivity.class);
                         showArticleActivity.putExtra("VALUE_URL_ARTICLE",value);
@@ -85,6 +85,8 @@ public abstract class BaseFragment extends Fragment {
     // CONFIGURATION
     // --------------------
 
+
+    //Build the recycler view
     public void buildRecyclerView(){
         this.mAdapter = new RecyclerViewAdapter(mArray, Glide.with(this));
         this.mRecyclerView.setHasFixedSize(true);
@@ -92,11 +94,17 @@ public abstract class BaseFragment extends Fragment {
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+
+    //Configure the swipe when the user refresh the page
     public void configureSwipeRefreshLayout(){
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                executeHttpRequestWithRetrofit();
+                try {
+                    executeHttpRequestWithRetrofit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -105,21 +113,31 @@ public abstract class BaseFragment extends Fragment {
     // HTTP (RxJAVA)
     // --------------------
 
+
+    //Avoid memory leaks
     public void disposeWhenDestroy() {
         if(this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 
+    /**
+     * Send the array of result to the recycler adapter for Top Stories and Most Popular
+     * @param result list of NewYorkTimesAPI
+     */
     public void updateUI(NewYorkTimesAPI result) {
         mSwipeRefreshLayout.setRefreshing(false);
-        mArray.clear();
-        mArray.addAll(result.getResults());
+        this.mArray.clear();
+        this.mArray.addAll(result.getResults());
         this.mAdapter.notifyDataSetChanged();
     }
 
-    public void updateSearchResultUI(NewYorkTimesAPI searchArticles) {
+    /**
+     * Send the array of result to the recycler adapter for Search Articles
+     * @param result list of NewYorkTimesAPI
+     */
+    public void updateSearchResultUI(NewYorkTimesAPI result) {
         mSwipeRefreshLayout.setRefreshing(false);
         this.mArray.clear();
-        this.mArray.addAll(searchArticles.getResponse().getDocs());
+        this.mArray.addAll(result.getResponse().getDocs());
         this.mAdapter.notifyDataSetChanged();
     }
 }
