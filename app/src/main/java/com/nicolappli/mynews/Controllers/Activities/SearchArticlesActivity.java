@@ -124,8 +124,6 @@ public class SearchArticlesActivity extends AppCompatActivity {
                 mEndDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
             }
 
-
-
             String[] values = {mQuery, getNewDesk(mCheckBoxStatus), mUtil.parseDateToyyyyMMdd(mBeginDate), mUtil.parseDateToyyyyMMdd(mEndDate)};
 
             Log.d("nicotagtest", "values = " + values[0]);
@@ -142,6 +140,10 @@ public class SearchArticlesActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * display an error message if the user didn't specify query or/and if none checkbox is checked
+     * @param errorMessage the error message for the user
+     */
     public void alertDialogError(String errorMessage) {
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(SearchArticlesActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_search_error, null);
