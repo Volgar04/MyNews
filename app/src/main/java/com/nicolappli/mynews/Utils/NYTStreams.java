@@ -25,7 +25,7 @@ public class NYTStreams {
 
     public static Observable<NewYorkTimesAPI> streamFetchSearchArticles(String query, String news_desk, String begin_date, String end_date){
         NYTService nytService = NYTService.retrofit.create(NYTService.class);
-        return nytService.getSearchArticle(query, news_desk, begin_date, end_date)//, begin_date, end_date
+        return nytService.getSearchArticle(query, news_desk, begin_date, end_date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
@@ -33,7 +33,7 @@ public class NYTStreams {
 
     public static Observable<NewYorkTimesAPI> streamFetchSection(String news_desk, String page){
         NYTService nytService = NYTService.retrofit.create(NYTService.class);
-        return nytService.getSection(news_desk, page)//, begin_date, end_date
+        return nytService.getSection(news_desk, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);

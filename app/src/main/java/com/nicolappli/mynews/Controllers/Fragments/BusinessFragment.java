@@ -1,18 +1,10 @@
 package com.nicolappli.mynews.Controllers.Fragments;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.nicolappli.mynews.Models.NewYorkTimesAPI;
-import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.NYTStreams;
-
 import io.reactivex.observers.DisposableObserver;
 
 /**

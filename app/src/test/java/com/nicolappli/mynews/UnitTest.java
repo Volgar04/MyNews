@@ -6,6 +6,10 @@ import net.bytebuddy.build.ToStringPlugin;
 
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,20 +23,60 @@ public class UnitTest {
 
     @Test
     public void parseDateToyyyyMMdd_isCorrect(){
-        String changedDate = util.parseDateToyyyyMMdd("02112018");
-        assertEquals("20181102", changedDate);
+        String inputDate = "ddMMyyyy";
+        String outputDate = "yyyyMMdd";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputDate);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputDate);
+
+        Date date = null;
+        String str = null;
+
+        try{
+            date = inputFormat.parse("02112018");
+            str = outputFormat.format(date);
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+
+        assertEquals("20181102", str);
     }
 
     @Test
     public void parseDateToddMMyy_isCorrect(){
-        String changedDate = util.parseDateToddMMyy("2018-11-02");
-        assertEquals("02/11/2018", changedDate);
+        String inputDate = "yyyy-MM-dd";
+        String outputDate = "dd/MM/yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputDate);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputDate);
+
+        Date date = null;
+        String str = null;
+
+        try{
+            date = inputFormat.parse("2018-11-02");
+            str = outputFormat.format(date);
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        assertEquals("02/11/2018", str);
     }
 
     @Test
     public void parseDateForNotifications_isCorrect(){
-        String changedDate = util.parseDateForNotifications("2018-11-02");
-        assertEquals("20181102", changedDate);
+        String inputDate = "yyyy-MM-dd";
+        String outputDate = "yyyyMMdd";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputDate);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputDate);
+
+        Date date = null;
+        String str = null;
+
+        try{
+            date = inputFormat.parse("2018-11-02");
+            str = outputFormat.format(date);
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        assertEquals("20181102", str);
     }
 
 }

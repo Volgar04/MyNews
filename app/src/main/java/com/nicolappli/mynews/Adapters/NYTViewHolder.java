@@ -42,24 +42,21 @@ class NYTViewHolder extends RecyclerView.ViewHolder {
     void updateWithNewYorkTimesAPI(NewYorkTimesAPI.Result result, RequestManager glide) {
         // set Section
         if((result.getSection()!=null)&&(!result.getSection().isEmpty())){
-            // set subsection if possible
-            if ((result.getSubsection() != null) && (!result.getSubsection().isEmpty()))
-                this.txtTitleArticle.setText(result.getSection()+" > "+result.getSubsection());
-            this.txtSectionArticle.setText(result.getSection());
+            this.txtSectionArticle.setText(result.getSection()); //for top stories and most popular
         }else
-            this.txtSectionArticle.setText(result.getNewsDesk());
+            this.txtSectionArticle.setText(result.getNewsDesk()); //for search articles
 
         // set Title
         if((result.getTitle()!=null)&&(!result.getTitle().isEmpty())){
-            this.txtTitleArticle.setText(result.getTitle());
+            this.txtTitleArticle.setText(result.getTitle()); //for top stories and most popular
         }else
-            this.txtTitleArticle.setText(result.getSnippet());
+            this.txtTitleArticle.setText(result.getSnippet()); //for search articles
 
         // set published date
         if((result.getPublishedDate()!=null)&&(!result.getPublishedDate().isEmpty())){
-            this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPublishedDate()));
+            this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPublishedDate())); //for top stories and most popular
         }else
-            this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPubDate()));
+            this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPubDate())); //for search articles
 
         // set image
         if ((result.getMultimedia() != null) && (!result.getMultimedia().isEmpty())){
@@ -75,14 +72,11 @@ class NYTViewHolder extends RecyclerView.ViewHolder {
             }
         }else if(result.getMedia() !=null&&!result.getMedia().isEmpty()&&result.getMedia().get(0).getMediaMetadata()!=null&&!result.getMedia().get(0).getMediaMetadata().isEmpty()) // for Most Popular
             glide.load(result.getMedia().get(0).getMediaMetadata().get(1).getUrl()).into(imageArticle);
-        else{
-            RelativeLayout.LayoutParams paramsTextView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        else{ // better text alignment when none image is available
             imageArticle.setVisibility(View.GONE);
             txtSectionArticle.setGravity(Gravity.START);
             txtTitleArticle.setGravity(Gravity.START);
             txtTitleArticle.setMaxLines(2);
-            //paramsTextView.setMargins(15, 20, 15, 20);
-            //txtTitleArticle.setLayoutParams(paramsTextView);
         }
     }
 }
