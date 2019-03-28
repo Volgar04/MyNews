@@ -1,9 +1,11 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +44,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private Disposable mDisposable;
     private RecyclerViewAdapter mAdapter;
     private List<NewYorkTimesAPI.Result> mSearchArticlesArray = new ArrayList<>();
+    private int nbrArticle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             public void onNext(NewYorkTimesAPI searchArticles) {
                 Log.i("SearchResult Tag", "On Next");
                 updateSearchResultUI(searchArticles);
+                nbrArticle=searchArticles.getResponse().getDocs().size();
             }
 
             @Override
@@ -121,6 +125,19 @@ public class SearchResultsActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 Log.i("SearchResult Tag", "On Complete !");
+                if(nbrArticle==0){
+                    new AlertDialog.Builder(SearchResultsActivity.this)
+                            .setTitle("Error")
+                            .setMessage("No found article !")
+                            .setCancelable(false)
+                            .setPositiveButton("I understand", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
             }
         });
     }

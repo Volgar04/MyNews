@@ -1,27 +1,26 @@
 package com.nicolappli.mynews.Controllers.Activities;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.nicolappli.mynews.R;
 import com.nicolappli.mynews.Utils.Util;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -34,25 +33,36 @@ import butterknife.OnClick;
 public class SearchArticlesActivity extends AppCompatActivity {
 
     // BinView CheckBoxes
-    @BindView(R.id.checkbox_arts) CheckBox mCheckBoxArts;
-    @BindView(R.id.checkbox_business) CheckBox mCheckBoxBusiness;
-    @BindView(R.id.checkbox_science) CheckBox mCheckBoxScience;
-    @BindView(R.id.checkbox_politics) CheckBox mCheckBoxPolitics;
-    @BindView(R.id.checkbox_sports) CheckBox mCheckBoxSports;
-    @BindView(R.id.checkbox_travel) CheckBox mCheckBoxTravel;
+    @BindView(R.id.checkbox_arts)
+    CheckBox mCheckBoxArts;
+    @BindView(R.id.checkbox_business)
+    CheckBox mCheckBoxBusiness;
+    @BindView(R.id.checkbox_science)
+    CheckBox mCheckBoxScience;
+    @BindView(R.id.checkbox_politics)
+    CheckBox mCheckBoxPolitics;
+    @BindView(R.id.checkbox_sports)
+    CheckBox mCheckBoxSports;
+    @BindView(R.id.checkbox_travel)
+    CheckBox mCheckBoxTravel;
     // BindView EditText and Button (query, begin_date, end_date and search_button)
-    @BindView(R.id.edt_query) EditText mEditTextQuery;
-    @BindView(R.id.edt_date_begin) EditText mEditTextBeginDate;
-    @BindView(R.id.edt_date_end) EditText mEditTextEndDate;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.edt_query)
+    EditText mEditTextQuery;
+    @BindView(R.id.txt_choose_date_begin)
+    TextView mTxtChooseDateBegin;
+    @BindView(R.id.txt_choose_date_end)
+    TextView mTxtChooseDateEnd;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     public String[] CHECKBOX_VALUES = {"Arts", "Business", "Science", "Politics", "Sports", "Travel"};
     public CheckBox[] checkBoxes;
     public String[] mCheckBoxStatus = new String[6];
-    public CheckBox[] mCheckBoxes;
     public String mQuery;
     public String mBeginDate, mEndDate;
     private Util mUtil = new Util();
+    private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
+    private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
 
 
     @Override
@@ -63,12 +73,28 @@ public class SearchArticlesActivity extends AppCompatActivity {
 
         this.configureToolbar();
 
-        // Initialise checkboxes list
-        this.mCheckBoxes = new CheckBox[]{mCheckBoxArts, mCheckBoxBusiness, mCheckBoxScience, mCheckBoxPolitics, mCheckBoxSports, mCheckBoxTravel};
+        mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month += 1;
+                String date = day + "/" + month + "/" + year;
+                mTxtChooseDateBegin.setText(date);
+            }
+        };
+
+        mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month += 1;
+                String date = day + "/" + month + "/" + year;
+                mTxtChooseDateEnd.setText(date);
+            }
+        };
     }
 
     /**
      * Test which checkboxes is checked
+     *
      * @param view every checkbox as one view
      */
     public void onCheckboxClicked(View view) {
@@ -80,12 +106,11 @@ public class SearchArticlesActivity extends AppCompatActivity {
                 mCheckBoxStatus[i] = null;
             }
         }
-
-        Log.d("testag", "cochées : "+ Arrays.toString(mCheckBoxStatus));
     }
 
     /**
      * Get sections thanks to checkboxes
+     *
      * @param strings The array of checkboxes checked
      * @return new desk
      */
@@ -99,7 +124,6 @@ public class SearchArticlesActivity extends AppCompatActivity {
                 res.append("\" ");
             }
         }
-        Log.d("testag", "cochées : "+ res.toString());
         return res.toString();
     }
 
@@ -110,62 +134,82 @@ public class SearchArticlesActivity extends AppCompatActivity {
     public void onViewClickedSearch() {
         String errorText;
         mQuery = mEditTextQuery.getText().toString();
-        mBeginDate = mEditTextBeginDate.getText().toString();
-        mEndDate = mEditTextEndDate.getText().toString();
+        mBeginDate = mTxtChooseDateBegin.getText().toString();
+        mEndDate = mTxtChooseDateEnd.getText().toString();
 
         if (!getNewDesk(mCheckBoxStatus).isEmpty() && !mQuery.isEmpty()) { // if minimum a checkbox is checked and if the query is not empty
 
-            if(mBeginDate.isEmpty()){ //if user don't specify a begin date, the current date -1 year is set
+            if (mBeginDate.isEmpty()) { //if user don't specify a begin date, the current date -1 year is set
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.YEAR, -1);
                 mBeginDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(cal.getTime());
             }
-            if(mEndDate.isEmpty()){ // if user don't specify a end date, the current date is set
+            if (mEndDate.isEmpty()) { // if user don't specify a end date, the current date is set
                 mEndDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
             }
 
             String[] values = {mQuery, getNewDesk(mCheckBoxStatus), mUtil.parseDateToyyyyMMdd(mBeginDate), mUtil.parseDateToyyyyMMdd(mEndDate)};
 
-            Log.d("nicotagtest", "values = " + values[0]);
-            Log.d("nicotagtest", "values = " + values[1]);
-            Log.d("nicotagtest", "values = " + values[2]);
-            Log.d("nicotagtest", "values = " + values[3]);
-
             Intent searchResultsActivity = new Intent(SearchArticlesActivity.this, SearchResultsActivity.class);
             searchResultsActivity.putExtra("VALUES_SEARCH_ARTICLES", values); // put the values (checkboxes and query) to the result activity
             startActivity(searchResultsActivity);
         } else {
-            errorText = "Il faut écrire du text dans la barre de recherche";
+            errorText = "You must enter text and check a category !";
             this.alertDialogError(errorText);
         }
     }
 
     /**
      * display an error message if the user didn't specify query or/and if none checkbox is checked
+     *
      * @param errorMessage the error message for the user
      */
     public void alertDialogError(String errorMessage) {
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(SearchArticlesActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_search_error, null);
-        TextView mErrorDescription = mView.findViewById(R.id.txt_error_description);
-        Button mUnderstand = mView.findViewById(R.id.btn_understand);
-        mErrorDescription.setText(errorMessage); // set the good error message
-
-        mBuilder.setView(mView);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.show();
-        mUnderstand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-            }
-        });
+        new AlertDialog.Builder(SearchArticlesActivity.this)
+                .setTitle("Error")
+                .setMessage(errorMessage)
+                .setPositiveButton("I understand", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
     }
+
 
     public void configureToolbar() {
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
         assert ab != null;
         ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @OnClick({R.id.txt_choose_date_begin, R.id.txt_choose_date_end})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.txt_choose_date_begin:
+                this.createDatePicker(mDateSetListenerBegin, "Begin Date");
+                break;
+            case R.id.txt_choose_date_end:
+                this.createDatePicker(mDateSetListenerEnd, "End Date");
+                break;
+        }
+    }
+
+    private void createDatePicker(DatePickerDialog.OnDateSetListener dateSetListener, String stringDate){
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                SearchArticlesActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog,
+                dateSetListener,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setTitle(stringDate);
+        dialog.show();
     }
 }

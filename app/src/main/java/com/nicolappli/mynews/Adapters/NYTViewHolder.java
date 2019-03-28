@@ -40,25 +40,34 @@ class NYTViewHolder extends RecyclerView.ViewHolder {
      * @param glide For images
      */
     void updateWithNewYorkTimesAPI(NewYorkTimesAPI.Result result, RequestManager glide) {
-        // set Section
+        this.setArticleTitle(result);
+        this.setArticleSection(result);
+        this.setArticlePubDate(result);
+        this.setArticleImage(result, glide);
+    }
+
+    private void setArticleSection(NewYorkTimesAPI.Result result){
         if((result.getSection()!=null)&&(!result.getSection().isEmpty())){
             this.txtSectionArticle.setText(result.getSection()); //for top stories and most popular
         }else
             this.txtSectionArticle.setText(result.getNewsDesk()); //for search articles
+    }
 
-        // set Title
-        if((result.getTitle()!=null)&&(!result.getTitle().isEmpty())){
-            this.txtTitleArticle.setText(result.getTitle()); //for top stories and most popular
-        }else
-            this.txtTitleArticle.setText(result.getSnippet()); //for search articles
-
-        // set published date
-        if((result.getPublishedDate()!=null)&&(!result.getPublishedDate().isEmpty())){
+    private void setArticlePubDate(NewYorkTimesAPI.Result result){
+        if((result.getPublishedDate()!=null)&&(!result.getPublishedDate().isEmpty()))
             this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPublishedDate())); //for top stories and most popular
-        }else
+        else
             this.txtDateArticle.setText(mUtil.parseDateToddMMyy(result.getPubDate())); //for search articles
+    }
 
-        // set image
+    private void setArticleTitle(NewYorkTimesAPI.Result result){
+        if((result.getTitle()!=null)&&(!result.getTitle().isEmpty()))
+            this.txtTitleArticle.setText(result.getTitle()); //for top stories and most popular
+        else
+            this.txtTitleArticle.setText(result.getSnippet()); //for search articles
+    }
+
+    private void setArticleImage(NewYorkTimesAPI.Result result, RequestManager glide){
         if ((result.getMultimedia() != null) && (!result.getMultimedia().isEmpty())){
             if(result.getMultimedia().get(0).getUrl().substring(0,5).equals("https")) { // for Top Stories
                 glide.load(result.getMultimedia().get(1).getUrl()).into(imageArticle);
